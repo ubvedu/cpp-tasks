@@ -21,7 +21,7 @@ int *run(int init_size, int &length, int &size, bool &done, int &copied) {
             p++;
         }
         if (length >= size) {
-            auto size_new = size * 3 / 2;
+            auto size_new = (size * 3) / 2;
             auto trace_new = new (nothrow) int[size_new];
             if (!trace_new) {
                 done = false;
