@@ -8,23 +8,29 @@ using std::endl;
 int * compress(int ** matrix, int n, int m) {
     int * array = new int[n * 3];
     int k = 0;
-    for (int i = 0; i < n; i++) {
+    bool three_non_zeros = true;
+    for (int i = 0; i < n && three_non_zeros; i++) {
         int non_zero = 0;
-        for (int j = 0; j < m; j++) {
+        for (int j = 0; j < m && three_non_zeros; j++) {
             if (matrix[i][j] != 0) {
-                non_zero++;
-                if (non_zero > 3) {
-                    delete[] array;
-                    return nullptr;
+                if (++non_zero > 3) {
+                    three_non_zeros = false;
+                } else {
+                    array[k++] = matrix[i][j];
                 }
-                array[k++] = matrix[i][j];
             }
         }
         if (non_zero < 3) {
-            delete[] array;
-            return nullptr;
+            three_non_zeros = false;
         }
     }
+    if (!three_non_zeros) {
+        delete[] array;
+        array = nullptr;
+    }
+    for (int i = 0; i < n; i++)
+        delete[] matrix[i];
+    delete[] matrix;
     return array;
 }
 
@@ -40,7 +46,6 @@ int main() {
             cin >> a[i][j];
 
     int * compressed = compress(a, n, m);
-    delete[] a;
 
     if (!compressed) return 0;
 
